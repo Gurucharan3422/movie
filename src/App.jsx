@@ -1,0 +1,54 @@
+import React, { useContext } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { AuthContext, AuthProvider } from './AuthContext';
+import Navbar from './Navbar';
+import Home from './Home';
+import Login from './Login';
+import Register from './Register';
+import Movies from './Movies';
+import MovieDetails from './MovieDetails';
+import Playlist from './Playlist';
+
+const App = () => {
+  return (
+    <AuthProvider>
+      <Router>
+        <Layout /> {/* Handles Navbar visibility */}
+      </Router>
+    </AuthProvider>
+  );
+};
+
+const Layout = () => {
+  const location = useLocation();
+  const { isLogin } = useContext(AuthContext);
+
+  // Hide Navbar only on Login and Register pages
+  const hideNavbar = location.pathname === '/' || location.pathname === '/register';
+
+  return (
+    <>
+      {!hideNavbar && <Navbar />} {/* Show Navbar only if not on Login/Register */}
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* Private Routes */}
+        <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
+        <Route path="/movies" element={<PrivateRoute><Movies /></PrivateRoute>} />
+        <Route path="/movie/:id" element={<PrivateRoute><MovieDetails /></PrivateRoute>} />
+        <Route path="/playlist" element={<PrivateRoute><Playlist /></PrivateRoute>} />
+
+        <Route path="*" element={<Navigate to="/home" />} />
+      </Routes>
+    </>
+  );
+};
+
+const PrivateRoute = ({ children }) => {
+  const { isLogin } = useContext(AuthContext);
+  return isLogin ? children : <Navigate to="/" />;
+};
+
+export default App;

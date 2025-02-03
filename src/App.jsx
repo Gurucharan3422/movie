@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import React, { useContext, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext, AuthProvider } from './AuthContext';
 import Navbar from './Navbar';
 import Home from './Home';
@@ -22,6 +22,14 @@ const App = () => {
 const Layout = () => {
   const location = useLocation();
   const { isLogin } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  // Redirect to login if not logged in and trying to access protected routes
+  useEffect(() => {
+    if (!isLogin && location.pathname !== '/' && location.pathname !== '/register') {
+      navigate('/'); // Redirect to login page if not logged in
+    }
+  }, [location, isLogin, navigate]);
 
   // Hide Navbar only on Login and Register pages
   const hideNavbar = location.pathname === '/' || location.pathname === '/register';
@@ -40,6 +48,7 @@ const Layout = () => {
         <Route path="/movie/:id" element={<PrivateRoute><MovieDetails /></PrivateRoute>} />
         <Route path="/playlist" element={<PrivateRoute><Playlist /></PrivateRoute>} />
 
+        {/* Redirect to Home if no route matches */}
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
     </>

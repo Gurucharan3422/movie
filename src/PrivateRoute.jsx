@@ -1,7 +1,7 @@
 import "react";
 import { Route, Navigate } from "react-router-dom";
 
-const PrivateRoute = ({ element: Component, ...rest }) => {
+const PrivateRoute = ({ element: , ...rest }) => {
   const isLoggedIn = localStorage.getItem("loggedIn");
 
   return (

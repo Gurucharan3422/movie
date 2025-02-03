@@ -29,7 +29,7 @@ const Layout = () => {
     if (!isLogin && location.pathname !== '/' && location.pathname !== '/register') {
       navigate('/'); // Redirect to login page if not logged in
     }
-  }, [location, isLogin, navigate]);
+  }, [isLogin, location.pathname, navigate]);
 
   // Hide Navbar only on Login and Register pages
   const hideNavbar = location.pathname === '/' || location.pathname === '/register';

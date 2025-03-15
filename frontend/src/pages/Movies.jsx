@@ -1,10 +1,10 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/Movies.css";
 
 const Movies = () => {
   const [movies, setMovies] = useState([]);
-  const [loading, setLoading] =useState(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [addedMovies, setAddedMovies] = useState([]);
   const [searchQuery, setSearchQuery] = useState(""); // 🔍 Search state
@@ -17,19 +17,37 @@ const Movies = () => {
     if (!playlist.some((item) => item._id === movie._id)) {
       playlist.push(movie);
       localStorage.setItem("playlist", JSON.stringify(playlist));
-      setAddedMovies((prev) => [...prev, movie._id]);  // ✅ Changed id to _id
+      setAddedMovies((prev) => [...prev, movie._id]);  
     }
   };
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await fetch(API_URL);
+        const token = localStorage.getItem("token");
+        if (!token) {
+          setError("Unauthorized: No token found");
+          setLoading(false);
+          return;
+        }
+
+        const response = await fetch(API_URL, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json", // ✅ Added this
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch movies. Please log in again.");
+        }
+
         const data = await response.json();
         setMovies(data);
-        setLoading(false);
       } catch (err) {
-        setError("Failed to fetch movies");
+        setError(err.message);
+      } finally {
         setLoading(false);
       }
     };

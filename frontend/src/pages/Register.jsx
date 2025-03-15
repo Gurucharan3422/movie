@@ -1,40 +1,48 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/Register.css";
 
 const Register = () => {
+  const [username, setUsername] = useState(""); // Added username field
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleRegister = (e) => {
+  const API_URL = "http://localhost:5000/auth/register"; // Backend endpoint
+
+  const handleRegister = async (e) => {
     e.preventDefault();
+
+    if (!username || !email || !password) {
+      alert("All fields are required!");
+      return;
+    }
 
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
 
-    // Get existing users from localStorage
-    const users = JSON.parse(localStorage.getItem("users")) || [];
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password }), // Send username to backend
+      });
 
-    // Check if email already exists
-    const userExists = users.some((user) => user.email === email);
-    if (userExists) {
-      alert("User already exists!");
-      return;
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Registration successful! You can now login.");
+        navigate("/"); // Redirect to login page
+      } else {
+        alert(data.message || "Registration failed!");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Something went wrong! Please try again.");
     }
-
-    // Add new user to the array
-    const newUser = { email, password };
-    users.push(newUser);
-
-    // Save updated users array to localStorage
-    localStorage.setItem("users", JSON.stringify(users));
-
-    alert("Registration successful! You can now login.");
-    navigate("/"); // Redirect to login page
   };
 
   return (
@@ -42,6 +50,13 @@ const Register = () => {
       <div className="register-box">
         <h2>Register</h2>
         <form onSubmit={handleRegister}>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
           <input
             type="email"
             placeholder="Email"

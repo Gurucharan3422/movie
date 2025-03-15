@@ -1,4 +1,4 @@
-import  { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import "../styles/Login.css";
@@ -9,26 +9,35 @@ const Login = () => {
   const navigate = useNavigate();
   const { setLogin } = useContext(AuthContext); // Use context to update login state
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Get users from localStorage
-    const users = JSON.parse(localStorage.getItem("users")) || [];
+    try {
+      const response = await fetch("http://localhost:5000/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    // Check if user exists with matching email and password
-    const user = users.find((u) => u.email === email && u.password === password);
+      const data = await response.json();
 
-    if (!user) {
-      alert("Invalid credentials. Please try again.");
-      return;
+      if (!response.ok) {
+        alert(data.message || "Invalid credentials");
+        return;
+      }
+
+      // Store the token in localStorage
+      localStorage.setItem("token", data.token);
+      setLogin(true);
+
+      alert("Login successful!");
+      navigate("/home"); // Redirect to home page
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Something went wrong. Please try again.");
     }
-
-    // Mark user as logged in
-    localStorage.setItem("isLogin", JSON.stringify(true));
-    setLogin(true);
-
-    alert("Login successful!");
-    navigate("/home"); // Redirect to home page
   };
 
   return (

@@ -22,7 +22,20 @@ const MovieDetails = () => {
         const API_URL = `http://localhost:5000/movies/${id}`;
         console.log("Fetching Movie from:", API_URL);
 
-        const response = await fetch(API_URL);
+        // Get token from localStorage
+        const token = localStorage.getItem("token");
+        if (!token) {
+          throw new Error("Access Denied: No Token Provided");
+        }
+
+        const response = await fetch(API_URL, {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`, // Attach token
+            "Content-Type": "application/json",
+          },
+        });
+
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -34,7 +47,7 @@ const MovieDetails = () => {
         setLoading(false);
       } catch (err) {
         console.error("Error Fetching Movie:", err.message);
-        setError("Failed to fetch movie details");
+        setError(err.message);
         setLoading(false);
       }
     };

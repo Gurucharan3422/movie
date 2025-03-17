@@ -9,7 +9,7 @@ const Movies = () => {
   const [addedMovies, setAddedMovies] = useState([]);
   const [searchQuery, setSearchQuery] = useState(""); // 🔍 Search state
 
-  const API_URL = "http://localhost:5000/movies";
+  const API_URL = "https://movie-qp7k.onrender.com/movies";
 
   const addtoPlaylist = (movie) => {
     const playlist = JSON.parse(localStorage.getItem("playlist")) || [];

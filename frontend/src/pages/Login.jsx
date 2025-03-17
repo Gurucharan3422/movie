@@ -12,6 +12,10 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    console.log("Login button clicked!");
+    console.log("Entered Email:", email);
+    console.log("Entered Password:", password);
+
     try {
       const response = await fetch("https://movie-qp7k.onrender.com/auth/login", {
         method: "POST",
@@ -21,7 +25,10 @@ const Login = () => {
         body: JSON.stringify({ email, password }),
       });
 
+      console.log("API Response Status:", response.status);
+
       const data = await response.json();
+      console.log("API Response Data:", data);
 
       if (!response.ok) {
         throw new Error(data.message || "Invalid credentials");

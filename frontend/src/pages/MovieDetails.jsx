@@ -19,7 +19,7 @@ const MovieDetails = () => {
 
     const fetchMovieDetails = async () => {
       try {
-        const API_URL = `http://localhost:5000/movies/${id}`;
+        const API_URL = `https://movie-qp7k.onrender.com/movies/${id}`;
         console.log("Fetching Movie from:", API_URL);
 
         // Get token from localStorage

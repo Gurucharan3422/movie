@@ -8,6 +8,6 @@ export default defineConfig({
     port: process.env.PORT || 5173,
   },
   preview: {
-    allowedHosts: ["movie-2-1aaf.onrender.com"], // Add your Render domain
+    allowedHosts: ["gurucharan.onrender.com"], // Add your Render domain
   }
 });

@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const movieRoutes = require("./routes/movieRoutes");
 const authRoutes = require("./routes/authRoutes");
+const Movie = require("./models/movieModel");
 
 dotenv.config();
 
@@ -22,8 +23,13 @@ mongoose
   .catch((err) => console.error("MongoDB Connection Error:", err));
 
 // Default route to prevent "Cannot GET /"
-app.get("/", (req, res) => {
-  res.send("Welcome to the Movie API!");
+app.get("/", async (req, res) => {
+  try {
+    const movies = await Movie.find(); // Fetch all movies from MongoDB
+    res.json(movies); // Return movies as JSON response
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch movies" });
+  }
 });
 
 // Use authentication routes

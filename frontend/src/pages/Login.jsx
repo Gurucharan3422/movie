@@ -13,7 +13,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:5000/auth/login", {
+      const response = await fetch("https://movie-qp7k.onrender.com/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -24,8 +24,7 @@ const Login = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.message || "Invalid credentials");
-        return;
+        throw new Error(data.message || "Invalid credentials");
       }
 
       // Store the token in localStorage
@@ -36,7 +35,7 @@ const Login = () => {
       navigate("/home"); // Redirect to home page
     } catch (error) {
       console.error("Login error:", error);
-      alert("Something went wrong. Please try again.");
+      alert(error.message || "Something went wrong. Please try again.");
     }
   };
 

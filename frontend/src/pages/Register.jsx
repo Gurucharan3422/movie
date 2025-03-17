@@ -9,7 +9,7 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
-  const API_URL = "http://localhost:5000/auth/register"; // Backend endpoint
+  const API_URL = "https://movie-qp7k.onrender.com/auth/register"; // Backend endpoint
 
   const handleRegister = async (e) => {
     e.preventDefault();

@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const movieRoutes = require("./routes/movieRoutes");
-const authRoutes = require("./routes/authRoutes");  // Add this import
+const authRoutes = require("./routes/authRoutes");  
 
 dotenv.config();
 
@@ -12,6 +12,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Debugging: Check if MONGO_URI is being read correctly
+console.log("MONGO_URI:", process.env.MONGO_URI);
+
 // Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -19,7 +22,7 @@ mongoose
   .catch((err) => console.error("MongoDB Connection Error:", err));
 
 // Use authentication routes
-app.use("/auth", authRoutes);  // Add this line for authentication routes
+app.use("/auth", authRoutes);  
 
 // Use movie routes
 app.use("/movies", movieRoutes);

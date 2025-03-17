@@ -4,10 +4,10 @@ const router = express.Router();
 const authenticateToken = require("../middleware/authMiddleware"); // Import the authentication middleware
 
 // GET all movies (requires authentication)
-router.get("/", authenticateToken, getAllMovies);
+router.get("/",  getAllMovies);
 
 // GET a single movie by ID (requires authentication)
-router.get("/:id", authenticateToken, getMovieById);
+router.get("/:id", getMovieById);
 
 // POST a new movie (requires authentication)
 router.post("/", authenticateToken, addMovie);

@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const movieRoutes = require("./routes/movieRoutes");
-const authRoutes = require("./routes/authRoutes");  
+const authRoutes = require("./routes/authRoutes");
 
 dotenv.config();
 
@@ -21,11 +21,16 @@ mongoose
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.error("MongoDB Connection Error:", err));
 
+// Default route to prevent "Cannot GET /"
+app.get("/", (req, res) => {
+  res.send("Welcome to the Movie API!");
+});
+
 // Use authentication routes
-app.use("/auth", authRoutes);  
+app.use("/auth", authRoutes);
 
 // Use movie routes
 app.use("/movies", movieRoutes);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(Server running on port ${PORT}));
